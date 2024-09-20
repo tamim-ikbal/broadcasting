@@ -16,15 +16,14 @@ class FriendSuggestion extends Component
 
     public function render()
     {
-        $excludeIds   = Auth::user()->friends()->select('id')->pluck('id');
-        $excludeIds[] = Auth::id();
-        $friends      = User::query()
-                            ->whereDoesntHave('friends', function (Builder $builder) {
-                                $builder->where('friends.user_id', '=', Auth::id())
-                                        ->orWhere('friends.friend_id', '=', Auth::id());
-                            })
-                            ->orderBy('id', 'ASC')
-                            ->paginate(20);
+        $friends = User::query()
+                       ->whereDoesntHave('friends', function (Builder $builder) {
+                           $builder->where('friends.user_id', '=', Auth::id())
+                                   ->orWhere('friends.friend_id', '=', Auth::id());
+                       })
+                       ->where('id', '!=', Auth::id())
+                       ->orderBy('id', 'ASC')
+                       ->paginate(20);
 
         return view('livewire.friend-suggestion', compact('friends'));
     }

@@ -18,7 +18,8 @@
                                     @foreach($inboxes as $inbox)
                                         <li class="w-full">
                                             <x-link :href="route('chat.messages',$inbox->id)"
-                                                    :active="request()->routeIs('chat.messages',$inbox->id)">
+                                                    :active="request()->is('chats/'.$inbox->id)"
+                                                    wire:navigate>
                                                 <div class="flex items-center gap-2">
                                                     <div class="avatar">
                                                         <img src="https://placehold.co/100x100"
@@ -32,7 +33,17 @@
                                                                 {{ $inbox->creator->name?? '' }}
                                                             @endif
                                                         </h4>
-                                                        <div class="text-xs text-gray-300">Inactive</div>
+                                                        <div class="text-xs text-gray-300">
+                                                            @if($inbox->creator->id === Auth::id())
+                                                                <livewire:online-status
+                                                                    :userId="$inbox->inboxable->id"
+                                                                    wire:key="os-{{$inbox->inboxable->id}}"/>
+                                                            @else
+                                                                <livewire:online-status
+                                                                    :userId="$inbox->creator->id"
+                                                                    wire:key="os-{{ $inbox->creator->id }}"/>
+                                                            @endif
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </x-link>

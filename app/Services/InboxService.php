@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Inbox;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -12,8 +11,16 @@ class InboxService
 {
     const INBOX_CACHE_KEY_PREFIX = 'inbox-users-';
 
-    public static function createInbox(Authenticatable $user, int $inboxableId, string $inboxableType): Inbox|null
-    {
+    public static function createInbox(
+        Authenticatable $user,
+        int $inboxableId,
+        string $inboxableType
+    ): Inbox|null {
+        $hasInbox = static::getInbox($user, $inboxableId, $inboxableType);
+        if ($hasInbox) {
+            return $hasInbox;
+        }
+
         $inbox = Inbox::create([
             'creator_id'     => $user->id,
             'inboxable_id'   => $inboxableId,
@@ -54,5 +61,20 @@ class InboxService
     public static function clearCache($userId): void
     {
         Cache::forget(self::INBOX_CACHE_KEY_PREFIX.$userId);
+    }
+
+    public static function getInbox(Authenticatable $user, int $inboxableId, string $inboxableType)
+    {
+        return Inbox::query()
+                    ->where(function ($query) use ($user, $inboxableId, $inboxableType) {
+                        $query->where('creator_id', '=', $user->id)
+                              ->where('inboxable_id', '=', $inboxableId)
+                              ->where('inboxable_type', '=', $inboxableType);
+                    })
+                    ->orWhere(function ($query) use ($user, $inboxableId, $inboxableType) {
+                        $query->where('creator_id', '=', $inboxableId)
+                              ->where('inboxable_id', '=', $user->id)
+                              ->where('inboxable_type', '=', $inboxableType);
+                    })->first();
     }
 }

@@ -33,6 +33,6 @@ class SendMessage extends Component
             return;
         }
 
-        $this->redirectRoute('chat.index');
+        $this->redirectRoute('chat.messages', $inbox->id);
     }
 }

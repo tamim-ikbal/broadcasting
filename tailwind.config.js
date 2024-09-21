@@ -27,7 +27,9 @@ export default {
                 typing: "typing .5s steps(20) infinite alternate, blink .7s infinite"
             }
         }, container: {
-            center: true, padding: '2rem', screens: {
+            center: true, padding: {
+                DEFAULT: '1rem', md: '2rem',
+            }, screens: {
                 sm: '100%', md: '100%', lg: '100%', xl: '80rem', '2xl': '80rem',
             },
         }

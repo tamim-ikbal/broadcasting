@@ -4,7 +4,7 @@
             {{ __('Friends Suggestion') }}
         </h2>
     </x-slot>
-    <div class="py-12">
+    <div class="py-5 lg:py-12">
         <div class="container">
             <x-card>
                 <livewire:friend-suggestion/>

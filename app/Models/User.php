@@ -57,7 +57,7 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: function (mixed $value, array $attributes) {
-                return $attributes['avatar'] ? asset('storage/'.$attributes['avatar']) : 'https://placehol.co/100x100';
+                return ! empty($attributes['avatar']) ? asset('storage/'.$attributes['avatar']) : 'https://via.placeholder.com/100x100';
             },
         );
     }

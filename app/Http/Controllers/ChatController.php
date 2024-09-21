@@ -12,28 +12,28 @@ class ChatController extends Controller
 {
     public function index()
     {
-
-        $inboxes = InboxService::getInboxes(Auth::id());
-
-        return view('chats.index', compact('inboxes'));
+        return view('chats.index');
     }
 
     public function messages(Request $request, $inboxId)
     {
-        $inboxes = InboxService::getInboxes(Auth::id());
-        $chat    = Inbox::query()
-                        ->where(function ($query) {
-                            $query->whereHas('creator', function ($query) {
-                                $query->where('users.id', '=', Auth::id());
-                            })
-                                  ->orWhereHas('inboxable', function ($query) {
-                                      $query->where('inboxes.inboxable_id', '=', Auth::id())
-                                            ->where('inboxes.inboxable_type', '=', User::class);
-                                  });
-                        })
-                        ->findOrFail($inboxId);
+        $inbox = Inbox::query()
+                      ->with(
+                          ['creator' => fn($query) => $query->select('id', 'name', 'avatar')],
+                          ['inboxable' => fn($query) => $query->select('id', 'name', 'avatar')]
+                      )
+                      ->where(function ($query) {
+                          $query->whereHas('creator', function ($query) {
+                              $query->where('users.id', '=', Auth::id());
+                          })
+                                ->orWhereHas('inboxable', function ($query) {
+                                    $query->where('inboxes.inboxable_id', '=', Auth::id())
+                                          ->where('inboxes.inboxable_type', '=', User::class);
+                                });
+                      })
+                      ->findOrFail($inboxId);
 
-        return view('chats.message', compact('inboxes', 'chat'));
+        return view('chats.message', compact('inbox'));
     }
 
 }

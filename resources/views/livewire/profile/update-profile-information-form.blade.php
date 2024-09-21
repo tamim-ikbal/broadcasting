@@ -125,6 +125,7 @@ new class extends Component {
             <x-text-input wire:model="avatar" id="avatar" name="avatar" type="file" class="mt-1 block w-full" required
                           autofocus autocomplete="name"/>
             <x-input-error class="mt-2" :messages="$errors->get('avatar')"/>
+            <div wire:loading wire:target="avatar" class="text-base text-gray-500">Uploading...</div>
             @if ($avatar)
                 <img src="{{ is_string($avatar) ? $avatar :$avatar->temporaryUrl() }}"
                      class="w-[100px] h-[100px] rounded-[100px] my-2">

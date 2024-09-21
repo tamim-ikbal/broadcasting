@@ -4,13 +4,12 @@ namespace App\Events;
 
 use App\Models\Inbox;
 use App\Models\Message;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+
 
 class MessageSent implements ShouldBroadcast
 {
@@ -23,7 +22,7 @@ class MessageSent implements ShouldBroadcast
         public Message $message,
         public Inbox $inbox,
     ) {
-        //
+
     }
 
     /**
@@ -36,5 +35,13 @@ class MessageSent implements ShouldBroadcast
         return [
             new PrivateChannel('messages.'.$this->inbox->id),
         ];
+    }
+
+    /**
+     * The name of the queue on which to place the broadcasting job.
+     */
+    public function broadcastQueue(): string
+    {
+        return 'message';
     }
 }

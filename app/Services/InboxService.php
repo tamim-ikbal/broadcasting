@@ -41,8 +41,8 @@ class InboxService
                         ->select('inboxes.*', DB::raw('MAX(messages.created_at) as last_message'))
                         ->leftJoin('messages', 'inboxes.id', '=', 'messages.inbox_id')
                         ->with(
-                            ['creator' => fn($query) => $query->select('id', 'name', 'avatar')],
-                            ['inboxable' => fn($query) => $query->select('id', 'name', 'avatar')],
+                            ['creator' => fn($query) => $query->select('id', 'name')],
+                            ['inboxable' => fn($query) => $query->select('id', 'name')],
                             ['latestMessage']
                         )
                         ->whereHas('creator', function ($query) use ($userId) {

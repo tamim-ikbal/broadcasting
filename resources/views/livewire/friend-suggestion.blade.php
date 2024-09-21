@@ -17,7 +17,9 @@
                     </p>
                 </div>
             </div>
-            <div>
+            <div class="flex gap-4">
+                <livewire:friends.send-message :friend="$friend" wire:key="smbtn-{{ $friend->id }}"
+                                               btnVariant="primary-outline"/>
                 <livewire:friends.add-friend :id="$friend->id" wire:key="button-{{ $friend->id }}"/>
             </div>
         </div>

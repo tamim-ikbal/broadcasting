@@ -11,6 +11,7 @@ use Livewire\Component;
 class SendMessage extends Component
 {
     public $friend;
+    public $btnVariant = 'primary';
 
     public function render()
     {
@@ -20,11 +21,11 @@ class SendMessage extends Component
     public function save()
     {
 
-        if ( ! FriendsService::isFriendsWith(Auth::user(), $this->friend->id)) {
-            session()->flash('error', 'You cannot send a message to this user.');
-
-            return;
-        }
+//        if ( ! FriendsService::isFriendsWith(Auth::user(), $this->friend->id)) {
+//            session()->flash('error', 'You cannot send a message to this user.');
+//
+//            return;
+//        }
 
         $inbox = InboxService::createInbox(Auth::user(), $this->friend->id, User::class);
         if ( ! $inbox) {
